@@ -19,5 +19,22 @@
 #  {'breed_name': 'australian', 'sub_breed_name': "shepherd"},
 #]
 
+#interview answer
+<# 
 $url = "https://dog.ceo/api/breeds/list/all"
 $response = Invoke-RestMethod -Uri $url -Method Get
+
+Write-Host $response
+ #>
+#Post interview answer
+
+$uri = "https://dog.ceo/api/breeds/list/all"
+try {
+    $response = Invoke-RestMethod -Uri $uri -Method Get
+    $breedsData = $response.message
+    Write-Host "Successfully retrieved dog breeds data" -ForegroundColor Green
+}
+catch {
+    Write-Host "Failed to fetch dog breeds: $_" -ForegroundColor Red
+    exit 1
+}

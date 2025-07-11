@@ -27,7 +27,7 @@ $response = Invoke-RestMethod -Uri $url -Method Get
 Write-Host $response
  #>
 #Post interview answer
-
+#1. 
 $uri = "https://dog.ceo/api/breeds/list/all"
 try {
     $response = Invoke-RestMethod -Uri $uri -Method Get
@@ -38,3 +38,30 @@ catch {
     Write-Host "Failed to fetch dog breeds: $_" -ForegroundColor Red
     exit 1
 }
+
+#2. 
+$flattenedBreeds = @()
+
+foreach ($breed in $breedsData.PSObject.Properties) {
+    $breedName = $breed.Name
+    $subBreeds = $breed.Value
+
+    if ($subBreeds.Count -eq 0) {
+        $flattenedBreeds += [PSCustomObject]@{
+            breed_name = $breedName
+            sub_breed_name = $null
+        }
+    }
+    else {
+        foreach ($subBreed in $subBreeds) {
+            $flattenedBreeds += [PSCustomObject]@{
+                breed_name = $breedName
+                sub_breed_name = $subBreed
+            }
+        }
+    }
+}
+
+# Output the results
+Write-Host "`nFlattened breeds list:" -ForegroundColor Cyan
+$flattenedBreeds | Format-Table -AutoSize
